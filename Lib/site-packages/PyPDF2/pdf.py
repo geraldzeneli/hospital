@@ -35,6 +35,7 @@
 A pure-Python PDF library with an increasing number of capabilities.
 See README for links to FAQ, documentation, homepage, etc.
 """
+import secrets
 
 __author__ = "Mathieu Fenniak"
 __author_email__ = "biziqe@mathieu.fenniak.net"
@@ -408,7 +409,7 @@ class PdfFileWriter(object):
             encryption.  When false, 40bit encryption will be used.  By default,
             this flag is on.
         """
-        import time, random
+        import time
         if owner_pwd == None:
             owner_pwd = user_pwd
         if use_128bit:
@@ -423,7 +424,7 @@ class PdfFileWriter(object):
         P = -1
         O = ByteStringObject(_alg33(owner_pwd, user_pwd, rev, keylen))
         ID_1 = ByteStringObject(md5(b_(repr(time.time()))).digest())
-        ID_2 = ByteStringObject(md5(b_(repr(random.random()))).digest())
+        ID_2 = ByteStringObject(md5(b_(repr(secrets.SystemRandom().random()))).digest())
         self._ID = ArrayObject((ID_1, ID_2))
         if rev == 2:
             U, key = _alg34(user_pwd, O, P, ID_1)
